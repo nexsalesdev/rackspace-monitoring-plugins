@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [[ $# -ge 1 ]]
+then
+    SERVICES="$@"
+fi
+
+TOTAL_OPEN_PORTS=$(lsof | wc -l)
+echo "metric total_open_ports int32 $TOTAL_OPEN_PORTS"
+
+if [[ ! -z "$SERVICES" ]]
+then
+    for SERVICE in $SERVICES
+    do
+        PORT_USAGE_SERVICE=$(lsof | grep $SERVICE | wc -l)
+        echo "metric port_usage_$SERVICE int32 $PORT_USAGE_SERVICE"
+    done
+fi
